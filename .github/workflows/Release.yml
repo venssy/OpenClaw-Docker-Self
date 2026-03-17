@@ -2,8 +2,14 @@ name: Auto Update Container Image (Improved)
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 2 * * *'
   workflow_dispatch:
+  push:                     # 新增：代码推送时触发
+    branches:
+      - main               # 监听 main 分支的推送
+    paths:                  # 仅监听以下文件变更
+      - 'Dockerfile'
+      - '.github/workflows/*.yml'
 
 env:
   REGISTRY: ghcr.io
@@ -45,7 +51,7 @@ jobs:
           fi
 
       - name: Compare digests and build if changed
-        if: ${{ env.PREVIOUS_DIGEST == 'none' || env.CURRENT_DIGEST != env.PREVIOUS_DIGEST }}
+        if: ${{ github.event_name == 'push' || env.PREVIOUS_DIGEST == 'none' || env.CURRENT_DIGEST != env.PREVIOUS_DIGEST }}
         run: |
           # 保存当前摘要供下次使用
           echo "${{ env.CURRENT_DIGEST }}" > .base-image-digest
@@ -61,5 +67,5 @@ jobs:
           echo "New image built and pushed with tag ${{ env.TARGET_TAG }}"
 
       - name: No update needed
-        if: ${{ env.PREVIOUS_DIGEST != 'none' && env.CURRENT_DIGEST == env.PREVIOUS_DIGEST }}
+        if: ${{ github.event_name != 'push' && env.PREVIOUS_DIGEST != 'none' && env.CURRENT_DIGEST == env.PREVIOUS_DIGEST }}
         run: echo "Base image has not changed, no build needed."
