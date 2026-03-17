@@ -1,0 +1,65 @@
+name: Auto Update Container Image (Improved)
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  BASE_IMAGE: justlikemaki/openclaw-docker-cn-im:latest
+  TARGET_TAG: latest
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get current base image digest
+        id: get-current-digest
+        run: | 
+          echo "CURRENT_DIGEST=$(docker manifest inspect ${{ env.BASE_IMAGE }} | jq -r '.[0].Digest')" >> $GITHUB_ENV
+
+      - name: Get previous base image digest from file
+        id: get-previous-digest
+        run: |
+          # 尝试从文件读取之前的摘要
+          if [ -f .base-image-digest ]; then
+            echo "PREVIOUS_DIGEST=$(cat .base-image-digest)" >> $GITHUB_ENV
+          else
+            echo "PREVIOUS_DIGEST=none" >> $GITHUB_ENV
+          fi
+
+      - name: Compare digests and build if changed
+        if: ${{ env.PREVIOUS_DIGEST == 'none' || env.CURRENT_DIGEST != env.PREVIOUS_DIGEST }}
+        run: |
+          # 保存当前摘要供下次使用
+          echo "${{ env.CURRENT_DIGEST }}" > .base-image-digest
+          
+          # 构建新镜像
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} \
+            --build-arg BASE_IMAGE=${{ env.BASE_IMAGE }} \
+            .
+          
+          # 推送新镜像
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }}
+          
+          echo "New image built and pushed with tag ${{ env.TARGET_TAG }}"
+
+      - name: No update needed
+        if: ${{ env.PREVIOUS_DIGEST != 'none' && env.CURRENT_DIGEST == env.PREVIOUS_DIGEST }}
+        run: echo "Base image has not changed, no build needed."
