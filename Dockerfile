@@ -4,8 +4,6 @@ FROM ${BASE_IMAGE}
 
 USER root
 
-RUN npm install -g mcporter
-
-RUN chown -R 1000:1000 "/home/node/.npm"
+RUN npm install -g mcporter && chown -R 1000:1000 "/home/node/.npm"
 
 USER node
