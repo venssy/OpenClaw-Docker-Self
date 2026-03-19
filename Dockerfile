@@ -16,13 +16,15 @@ ENV PATH="/usr/local/cuda-12/bin:$PATH" \
     LD_LIBRARY_PATH="/usr/local/cuda-12/lib64:$PATH"
 
     # 安装bun和ModelScope SDK
-RUN curl -fsSL https://bun.sh/install | bash
+# RUN curl -fsSL https://bun.sh/install | bash
 
-RUN mv /usr/local/bin/qmd /usr/local/bin/qmd.bak && \
-    bun install -g https://github.com/tobi/qmd
+# RUN mv /usr/local/bin/qmd /usr/local/bin/qmd.bak && \
+#     bun install -g https://github.com/tobi/qmd
 #    git clone https://github.com/tobi/qmd.git /qmd && cd /qmd && \
 #    bun install && bun run build -- --cuda && \
 #    rm -rf /qmd
+
+RUN npm install -g qmd
 
 RUN qmd status
 
