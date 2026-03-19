@@ -19,7 +19,7 @@ ENV PATH="/usr/local/cuda-12/bin:$PATH" \
 RUN curl -fsSL https://bun.sh/install | bash
 
 RUN mv /usr/local/bin/qmd /usr/local/bin/qmd.bak && \
-    git clone https://github.com/tobilu/qmd.git /qmd && cd /qmd && \
+    git clone https://github.com/tobi/qmd.git /qmd && cd /qmd && \
     bun install && bun run build -- --cuda && \
     rm -rf /qmd
 
