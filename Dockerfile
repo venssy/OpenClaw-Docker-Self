@@ -7,13 +7,13 @@ USER root
 RUN apt update && apt install -y --no-install-recommends \
     git curl ca-certificates gnupg2 python3 python3-pip && \
     # 添加CUDA源
-    curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-cuda-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/nvidia-cuda-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /" > /etc/apt/sources.list.d/cuda.list && \
-    apt update && apt install -y --no-install-recommends cuda-nvcc-13-0 libcudnn9-dev-cuda-13 vulkan-tools libvulkan-dev spirv-tools && \
+    # curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-cuda-keyring.gpg && \
+    # echo "deb [signed-by=/usr/share/keyrings/nvidia-cuda-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /" > /etc/apt/sources.list.d/cuda.list && \
+    # apt update && apt install -y --no-install-recommends cuda-nvcc-13-0 libcudnn9-dev-cuda-13 vulkan-tools libvulkan-dev spirv-tools && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH="/usr/local/cuda-13/bin:$PATH"
-ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
+# ENV PATH="/usr/local/cuda-13/bin:$PATH"
+# ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 
     # 安装bun和ModelScope SDK
 # RUN curl -fsSL https://bun.sh/install | bash
@@ -23,6 +23,8 @@ ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 #    git clone https://github.com/tobi/qmd.git /qmd && cd /qmd && \
 #    bun install && bun run build -- --cuda && \
 #    rm -rf /qmd
+
+ENV NODE_LLAMA_CPP_GPU=false
 
 RUN npm install -g qmd
 
