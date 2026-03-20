@@ -9,11 +9,11 @@ RUN apt update && apt install -y --no-install-recommends \
     # 添加CUDA源
     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-cuda-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/nvidia-cuda-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /" > /etc/apt/sources.list.d/cuda.list && \
-    apt update && apt install -y --no-install-recommends cuda-nvcc-12-8 libcudnn9-dev-cuda-12 vulkan-tools libvulkan-dev spirv-tools && \
+    apt update && apt install -y --no-install-recommends cuda-nvcc-13-1 libcudnn9-dev-cuda-13 vulkan-tools libvulkan-dev spirv-tools && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH="/usr/local/cuda-12/bin:$PATH" \
-    LD_LIBRARY_PATH="/usr/local/cuda-12/lib64:$PATH"
+ENV PATH="/usr/local/cuda-13/bin:$PATH" \
+    LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 
     # 安装bun和ModelScope SDK
 # RUN curl -fsSL https://bun.sh/install | bash
