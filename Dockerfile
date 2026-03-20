@@ -12,8 +12,8 @@ RUN apt update && apt install -y --no-install-recommends \
     apt update && apt install -y --no-install-recommends cuda-nvcc-13-1 libcudnn9-dev-cuda-13 vulkan-tools libvulkan-dev spirv-tools && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PATH="/usr/local/cuda-13/bin:$PATH" \
-    LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
+ENV PATH="/usr/local/cuda-13/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 
     # 安装bun和ModelScope SDK
 # RUN curl -fsSL https://bun.sh/install | bash
