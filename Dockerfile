@@ -26,7 +26,12 @@ ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 
 # ENV NODE_LLAMA_CPP_GPU=false
 
-# RUN export PATH="/usr/local/cuda-13/bin:$PATH" && npm install -g qmd && sed -i 's#hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf#hf:wangjinzzhong/bge-small-en-v1.5-Q4_K_M-GGUF/bge-small-en-v1.5-q4_k_m.gguf#;s#hf:ggml-org/Qwen3-0.6B-GGUF/Qwen3-0.6B-Q8_0.gguf#hf:Qwen/Qwen2.5-0.5B-Instruct-GGUF/qwen2.5-0.5b-instruct-q4_k_m.gguf#' /usr/local/lib/node_modules/@tobilu/qmd/dist/llm.js
+ENV STATE_DIR="${OPENCLAW_STATE_DIR:-$HOME/.openclaw}" \
+    AGENT_ID="main"  \
+    XDG_CONFIG_HOME="$STATE_DIR/agents/$AGENT_ID/qmd/xdg-config" \
+    XDG_CACHE_HOME="$STATE_DIR/agents/$AGENT_ID/qmd/xdg-cache"
+
+RUN export PATH="/usr/local/cuda-13/bin:$PATH" && npm install -g qmd && sed -i 's#hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf#hf:wangjinzzhong/bge-small-en-v1.5-Q4_K_M-GGUF/bge-small-en-v1.5-q4_k_m.gguf#;s#hf:tobil/qmd-query-expansion-1.7B-gguf/qmd-query-expansion-1.7B-q4_k_m.gguf#hf:Qwen/Qwen2.5-0.5B-Instruct-GGUF/qwen2.5-0.5b-instruct-q4_k_m.gguf#' /usr/local/lib/node_modules/@tobilu/qmd/dist/llm.js
 
 # RUN qmd status
 
@@ -34,4 +39,4 @@ RUN npm install -g mcporter && chown -R node:node "/home/node"
 
 USER node
 
-# RUN mkdir test && cd test && echo hello > test.md && qmd collection add . --name test && qmd embed && qmd query "hello"
+# RUN mkdir test && cd test && echo hello > test.md && qmd status && qmd collection add . --name test && qmd embed && qmd query "hello"
