@@ -26,7 +26,7 @@ RUN curl -fsSL https://bun.sh/install | bash
 
 ENV NODE_LLAMA_CPP_GPU=false
 
-RUN npm install -g qmd
+RUN npm install -g qmd && sed -i 's#hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf#hf:wangjinzzhong/bge-small-en-v1.5-Q4_K_M-GGUF/resolve/main/bge-small-en-v1.5-q4_k_m.gguf#;s#hf:ggml-org/Qwen3-0.6B-GGUF/Qwen3-0.6B-Q8_0.gguf#hf:Qwen/Qwen2.5-0.5B-Instruct-GGUF/qwen2.5-0.5b-instruct-q4_k_m.gguf#' /usr/local/lib/node_modules/@tobilu/qmd/dist/llm.js
 
 RUN qmd status
 
