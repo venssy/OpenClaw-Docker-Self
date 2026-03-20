@@ -28,8 +28,10 @@ ENV NODE_LLAMA_CPP_GPU=false
 
 RUN npm install -g qmd
 
-# RUN qmd status
+RUN qmd status
 
-RUN npm install -g mcporter && chown -R 1000:1000 "/home/node/.npm"
+RUN npm install -g mcporter && chown -R node:node "/home/node"
 
 USER node
+
+RUN mkdir test && cd test && echo hello > test.md && qmd collection add . --name test && qmd embed
