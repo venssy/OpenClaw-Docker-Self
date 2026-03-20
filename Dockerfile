@@ -5,7 +5,7 @@ FROM ${BASE_IMAGE}
 USER root
 
 RUN apt update && apt install -y --no-install-recommends \
-    git curl ca-certificates gnupg2 python3 python3-pip && \
+    git curl ca-certificates gnupg2 python3 python3-pip cmake g++ && \
     # 添加CUDA源
     # curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-cuda-keyring.gpg && \
     # echo "deb [signed-by=/usr/share/keyrings/nvidia-cuda-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /" > /etc/apt/sources.list.d/cuda.list && \
@@ -16,7 +16,7 @@ RUN apt update && apt install -y --no-install-recommends \
 # ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 
     # 安装bun和ModelScope SDK
-# RUN curl -fsSL https://bun.sh/install | bash
+RUN curl -fsSL https://bun.sh/install | bash
 
 # RUN mv /usr/local/bin/qmd /usr/local/bin/qmd.bak && \
 #     bun install -g https://github.com/tobi/qmd
@@ -34,4 +34,4 @@ RUN npm install -g mcporter && chown -R node:node "/home/node"
 
 USER node
 
-RUN mkdir test && cd test && echo hello > test.md && qmd collection add . --name test && qmd embed
+RUN mkdir test && cd test && echo hello > test.md && qmd collection add . --name test && qmd embed && qmd query "hello"
