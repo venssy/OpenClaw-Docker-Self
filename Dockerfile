@@ -26,7 +26,7 @@ ENV LD_LIBRARY_PATH="/usr/local/cuda-13/lib64:$PATH"
 
 RUN npm install -g qmd
 
-RUN qmd status
+# RUN qmd status
 
 RUN npm install -g mcporter && chown -R 1000:1000 "/home/node/.npm"
 
