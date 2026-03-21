@@ -65,7 +65,7 @@ jobs:
         with:
           driver-opts: |
             network=host
-          build-kit-flags: --debug
+          buildkitd-flags: --debug
 
       - name: Compare digests and build if changed
         if: ${{ github.event_name == 'push' || env.PREVIOUS_DIGEST == 'none' || env.CURRENT_DIGEST != env.PREVIOUS_DIGEST }}
