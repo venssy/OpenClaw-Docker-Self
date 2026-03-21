@@ -33,7 +33,7 @@ RUN export PATH="/usr/local/cuda-13/bin:$PATH" && npm install -g qmd && sed -i '
 
 # RUN qmd status
 
-RUN npm install -g mcporter && chown -R node:node "/home/node"
+RUN npm install -g mcporter && chown -R node:node "/home/node/.cache" "/home/node/.config" "/home/node/.openclaw"
 
 USER node
 
