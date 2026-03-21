@@ -33,7 +33,7 @@ RUN export PATH="/usr/local/cuda-13/bin:$PATH" && npm install -g qmd && sed -i '
 
 # RUN qmd status
 
-RUN npm install -g mcporter && if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache" fi
+RUN npm install -g mcporter && if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache"; fi
 
 USER node
 
