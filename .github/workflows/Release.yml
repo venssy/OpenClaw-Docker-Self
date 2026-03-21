@@ -50,20 +50,50 @@ jobs:
             echo "PREVIOUS_DIGEST=none" >> $GITHUB_ENV
           fi
 
+      # 缓存 Docker 构建层（BuildKit 缓存）
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('Dockerfile') }}  # 替换为你的依赖文件
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            network=host
+          build-kit-flags: --debug
+
       - name: Compare digests and build if changed
         if: ${{ github.event_name == 'push' || env.PREVIOUS_DIGEST == 'none' || env.CURRENT_DIGEST != env.PREVIOUS_DIGEST }}
         run: |
           # 保存当前摘要供下次使用
           echo "${{ env.CURRENT_DIGEST }}" > .base-image-digest
           
-          # 构建新镜像
-          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} \
+          # 构建新镜像V1
+          # docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} \
+          #   --build-arg BASE_IMAGE=${{ env.BASE_IMAGE }} \
+          #   .
+
+          # 推送新镜像V1
+          # docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }}
+
+          # 构建镜像（使用 BuildKit 缓存）
+          docker buildx build \
+            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }} \
             --build-arg BASE_IMAGE=${{ env.BASE_IMAGE }} \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache-new" \
+            --push \
             .
-          
-          # 推送新镜像
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_TAG }}
-          
+
+          # 移动缓存文件（避免缓存过大）
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
           echo "New image built and pushed with tag ${{ env.TARGET_TAG }}"
 
       - name: No update needed
