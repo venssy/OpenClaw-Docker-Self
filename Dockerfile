@@ -37,6 +37,8 @@ RUN npm install -g mcporter && \
     if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache"; fi && \
     if [ -d "/home/node/.npm" ]; then chown -R node:node "/home/node/.npm"; fi
 
+RUN sed -i.bak '/local current_owner/a     chown -R node:node $OPENCLAW_HOME/.npm\n' /usr/local/bin/init.sh
+
 USER node
 
 # RUN mkdir test && cd test && echo hello > test.md && qmd status && qmd collection add . --name test && qmd embed && qmd query "hello"
