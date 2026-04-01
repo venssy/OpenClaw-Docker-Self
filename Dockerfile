@@ -37,7 +37,7 @@ RUN npm install -g mcporter && \
     if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache"; fi && \
     if [ -d "/home/node/.npm" ]; then chown -R node:node "/home/node/.npm"; fi
 
-RUN sed -i.bak '/local current_owner/a     chown -R node:node $OPENCLAW_HOME/.npm\n' /usr/local/bin/init.sh
+RUN sed -i.bak '/local current_owner/a     chown -R node:node /home/node/.npm\n' /usr/local/bin/init.sh
 
 USER node
 
