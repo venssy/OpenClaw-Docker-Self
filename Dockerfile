@@ -39,4 +39,8 @@ RUN sed -i.bak '/local current_owner/a     chown -R node:node /home/node/.npm\n'
 
 USER node
 
+RUN npm config set registry https://registry.npmmirror.com/
+
+ENV PATH="$PATH:/home/node/.openclaw/extensions/node_modules/.bin"
+
 # RUN mkdir test && cd test && echo hello > test.md && qmd status && qmd collection add . --name test && qmd embed && qmd query "hello"
