@@ -35,6 +35,7 @@ RUN npm install -g openclaw mcporter pnpm acpx@latest codex && \
     cd /usr/local/lib/node_modules/openclaw/dist/extensions/acpx && \
     npm install acpx && \
     if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache"; fi && \
+    if [ -d "/home/node/.openclaw" ]; then chown -R node:node "/home/node/.openclaw"; fi && \
     if [ -d "/home/node/.npm" ]; then chown -R node:node "/home/node/.npm"; fi
 
 RUN sed -i.bak '/local current_owner/a     chown -R node:node /home/node/.npm\n' /usr/local/bin/init.sh
