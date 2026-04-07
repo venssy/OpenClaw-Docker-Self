@@ -37,11 +37,11 @@ RUN npm install -g openclaw mcporter pnpm acpx@latest codex && \
     if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache"; fi && \
     if [ -d "/home/node/.npm" ]; then chown -R node:node "/home/node/.npm"; fi
 
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
 RUN sed -i.bak '/local current_owner/a     chown -R node:node /home/node/.npm\n' /usr/local/bin/init.sh
 
 USER node
+
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 RUN npm config set registry https://registry.npmmirror.com/
 
