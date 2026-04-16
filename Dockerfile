@@ -31,7 +31,7 @@ ENV XDG_CONFIG_HOME="/home/node/.openclaw/agents/main/qmd/xdg-config" \
 
 RUN export PATH="/usr/local/cuda-13/bin:$PATH" && npm install -g qmd && sed -i 's#hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf#hf:chienweichang/jina-embeddings-v2-base-zh-GGUF/jina-embeddings-v2-base-zh-q8_0.gguf#;s#hf:tobil/qmd-query-expansion-1.7B-gguf/qmd-query-expansion-1.7B-q4_k_m.gguf#hf:Qwen/Qwen2.5-0.5B-Instruct-GGUF/qwen2.5-0.5b-instruct-q4_k_m.gguf#' /usr/local/lib/node_modules/@tobilu/qmd/dist/llm.js
 
-RUN npm install -g openclaw mcporter pnpm @anthropic-ai/claude-code @anthropic-ai/codex @anthropic-ai/gemini-cli @anthropic-ai/pi-agent && \
+RUN npm install -g openclaw mcporter pnpm @anthropic-ai/claude-code @openai/codex @google/gemini-cli && \
     # cd /usr/local/lib/node_modules/openclaw/ && \
     # npm install acpx && \
     if [ -d "/home/node/.cache" ]; then chown -R node:node "/home/node/.cache"; fi && \
