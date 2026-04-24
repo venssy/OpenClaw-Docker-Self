@@ -5,7 +5,7 @@ FROM ${BASE_IMAGE}
 USER root
 
 RUN apt update && apt install -y --no-install-recommends \
-    git curl ca-certificates gnupg2 python3 python3-pip cmake g++ tmux && \
+    git curl ca-certificates gnupg2 python3 python3-pip cmake g++ tmux sudo && \
     # 添加CUDA源
     curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-cuda-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/nvidia-cuda-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /" > /etc/apt/sources.list.d/cuda.list && \
@@ -40,12 +40,16 @@ RUN npm install -g openclaw mcporter pnpm @anthropic-ai/claude-code @openai/code
 
 RUN sed -i.bak '/local current_owner/a     chown -R node:node /home/node/.npm\n' /usr/local/bin/init.sh
 
+RUN echo 'node ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers && \
+    sed -i 's|http://deb.debian.org/debian|https://mirrors.aliyun.com/debian|g; s|http://security.debian.org/debian-security|https://mirrors.aliyun.com/debian-security|g' /etc/apt/sources.list.d/debian.sources
+
 USER node
 
 # RUN curl -fsSL https://claude.ai/install.sh | bash
 
-RUN npm config set registry https://registry.npmmirror.com/
-
+RUN npm config set registry https://registry.npmmirror.com/ && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+    
 ENV PATH="$PATH:/home/node/.openclaw/extensions/node_modules/.bin"
 
 # RUN mkdir test && cd test && echo hello > test.md && qmd status && qmd collection add . --name test && qmd embed && qmd query "hello"
