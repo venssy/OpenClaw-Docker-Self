@@ -15,7 +15,7 @@ env:
   REGISTRY: "registry.cn-hangzhou.aliyuncs.com"  # 阿里云 ACR 地址
   IMAGE_NAME: venssy/openclaw
   BASE_IMAGE: justlikemaki/openclaw-docker-cn-im:latest
-  TARGET_TAG: latest
+  TARGET_TAG: latest-self
 
 jobs:
   check-and-build:
